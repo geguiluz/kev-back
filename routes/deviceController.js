@@ -21,13 +21,19 @@ router.patch('/toggleDevice', auth, (req, res) => {
         if (!err) {
           // TODO: Error handling
           console.log('No errors on publish');
+        } else {
+          // TODO: Send message if connection fails (don't know how to do that).
+          // Next line is not firing off
+          console.log('Cannot establish connection with MQTT Broker');
         }
       });
     });
 
     const message = client.on('message', function(topic, payload) {
       // message is Buffer
-      console.log('Respuesta del device: ', payload.toString());
+      console.log(
+        `Response from device ${serialNumber}, topic ${topic} is: ${payload.toString()}`
+      );
       client.end();
       return payload;
     });
