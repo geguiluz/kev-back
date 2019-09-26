@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const mqtt = require('mqtt');
-const client = mqtt.connect('tcp://192.168.15.104');
 
 const auth = require('../middleware/auth');
 
@@ -12,25 +11,38 @@ const auth = require('../middleware/auth');
 
 router.patch('/toggleDevice', auth, (req, res) => {
   const { serialNumber } = req.body;
-
   try {
-    console.log('Toggling device', serialNumber);
-
+    // TODO: Set MQTT Broker address in config or somewhere else
+    const client = mqtt.connect('tcp://192.168.15.104');
     client.on('connect', function() {
-      client.subscribe('presence', function(err) {
+      console.log('Toggling device', serialNumber);
+      client.publish(`cmnd/${serialNumber}_fb/power`, '2');
+      client.subscribe(`stat/${serialNumber}_fb/POWER`, function(err) {
         if (!err) {
-          client.publish('cmnd/DVES_5A55AA_fb/power', 2);
+          // TODO: Error handling
+          console.log('No errors on publish');
         }
       });
     });
 
-    client.on('message', function(topic, payload) {
+    const message = client.on('message', function(topic, payload) {
       // message is Buffer
-      console.log(payload.toString());
+      console.log('Respuesta del device: ', payload.toString());
       client.end();
+      return payload;
     });
 
-    return res.json({ serialNumber, status: 'OFF' });
+    deviceStatus = message.toString();
+
+    // console.log('payload: ', message);
+
+    // TODO: Still need to solve issue with deviceStatus passing on an object
+    // when called from postman:
+    // {
+    //   "serialNumber": "DVES_5A55AA",
+    //   "deviceStatus": "[object Object]"
+    // }
+    return res.json({ serialNumber, deviceStatus });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
