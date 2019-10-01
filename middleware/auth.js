@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
-const config = require('config');
 
 module.exports = function(req, res, next) {
   // We'll use this only on protected routes
   // Get our token from our header
   const token = req.header('x-auth-token');
+  const secret = process.env.JWT_SECRET;
 
   //Check if not token
   if (!token) {
@@ -13,7 +15,7 @@ module.exports = function(req, res, next) {
 
   try {
     // console.log('Getting secret');
-    const decoded = jwt.verify(token, config.get('jwtSecret'));
+    const decoded = jwt.verify(token, secret);
 
     req.user = decoded.user;
     // console.log('Decoding complete');
