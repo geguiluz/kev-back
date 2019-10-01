@@ -16,10 +16,14 @@ router.post('/toggleDevice', auth, (req, res) => {
   const { serialNumber } = req.body;
   try {
     // TODO: Handle server crash when authentication fails
-    const client = mqtt.connect(process.env.MQTT_URL, {
-      username: process.env.MQTT_USER,
-      password: process.env.MQTT_PASSWORD,
-    });
+    console.log('Attempting MQTT connection with', process.env.MQTT_URL);
+    const client = mqtt.connect(
+      `${process.env.MQTT_URL}:${process.env.MQTT_PORT}`,
+      {
+        username: process.env.MQTT_USER,
+        password: process.env.MQTT_PASSWORD,
+      }
+    );
     client.on('connect', function() {
       console.log('Toggling device', serialNumber);
       client.publish(`cmnd/${serialNumber}_fb/power`, '2');
