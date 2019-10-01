@@ -78,7 +78,7 @@ router.put('/:id', auth, async (req, res) => {
   if (name) deviceFields.name = name;
   if (macAddress) deviceFields.macAddress = macAddress;
   if (isDisabled) deviceFields.isDisabled = isDisabled;
-  if (type) deviceFields.name = type;
+  if (type) deviceFields.type = type;
 
   try {
     let device = await Device.findById(req.params.id);
@@ -115,7 +115,7 @@ router.delete('/:id', auth, async (req, res) => {
   if (name) deviceFields.name = name;
   if (macAddress) deviceFields.macAddress = macAddress;
   if (isDisabled) deviceFields.isDisabled = isDisabled;
-  if (type) deviceFields.name = type;
+  if (type) deviceFields.type = type;
 
   try {
     let device = await Device.findById(req.params.id);
@@ -126,7 +126,6 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(401).json({ msg: 'Not authorized' });
     }
 
-    // { new: true } ----- This option allows us to create if it doesn't exist
     await Device.findByIdAndRemove(req.params.id);
     res.json({ msg: 'Device removed' });
   } catch (err) {
