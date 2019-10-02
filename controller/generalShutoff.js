@@ -11,7 +11,7 @@ module.exports = generalShutoff = async (user, response) => {
   devices.forEach(currentDevice => {
     const { serialNumber } = currentDevice;
     console.log('Turning off ', serialNumber);
-    powerDevice(serialNumber, 'OFF', res);
+    powerDevice(serialNumber, 'OFF');
   });
 
   return response.json({ msg: 'All devices Turned off', devices });

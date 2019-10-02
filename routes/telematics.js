@@ -15,10 +15,11 @@ const generalShutoff = require('../controller/generalShutoff');
 // @desc      Toggles device to its opposite state (ON/OFF)
 // @access    Private
 
-router.post('/toggleDevice', auth, (req, res) => {
+router.post('/toggleDevice', auth, async (req, res) => {
   const { serialNumber } = req.body;
   try {
-    res.json(powerDevice(serialNumber, '2', res));
+    deviceRes = await powerDevice(serialNumber, '2');
+    res.json(deviceRes);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -29,10 +30,11 @@ router.post('/toggleDevice', auth, (req, res) => {
 // @desc      Powers device ON or OFF specifically
 // @access    Private
 
-router.post('/powerDevice', auth, (req, res) => {
+router.post('/powerDevice', auth, async (req, res) => {
   const { serialNumber, command } = req.body;
   try {
-    res.json(powerDevice(serialNumber, command, res));
+    deviceRes = await powerDevice(serialNumber, command);
+    res.json(deviceRes);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

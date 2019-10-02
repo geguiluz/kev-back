@@ -2,9 +2,10 @@ require('dotenv').config();
 
 const mqtt = require('mqtt');
 
-module.exports = powerDevice = (serialNumber, command, response = false) => {
+module.exports = powerDevice = async (serialNumber, command) => {
   // TODO: Handle server crash when authentication fails
   console.log('Attempting MQTT connection with', process.env.MQTT_URL);
+  var mqttRes = '?';
   const client = mqtt.connect(
     `${process.env.MQTT_URL}:${process.env.MQTT_PORT}`,
     {
@@ -31,20 +32,30 @@ module.exports = powerDevice = (serialNumber, command, response = false) => {
     });
   });
 
-  client.on('message', function(topic, payload) {
-    // message is Buffer
-    if (topic === `stat/${serialNumber}_fb/POWER`) {
-      console.log(
-        `Response from device ${serialNumber}, topic ${topic} is: ${payload.toString()}`
-      );
-      client.end();
-      response = {
-        serialNumber,
-        deviceStatus: payload.toString(),
-      };
-      return response;
-    }
-    // TODO: Return error on message timeout
-  });
-  return response;
+  mensaje = () =>
+    client.on('message', async function(topic, payload) {
+      // message is Buffer
+      if (topic === `stat/${serialNumber}_fb/POWER`) {
+        console.log(
+          `Response from device ${serialNumber}, topic ${topic} is: ${payload.toString()}`
+        );
+        let status = ` ${payload.toString()}`;
+        client.end();
+        if (status === ' OFF') {
+          console.log('Entró al OFF');
+          return (mqttRes = mqttRes + 'OFF');
+        } else {
+          console.log('Entró al ON');
+          return (mqttRes = mqttRes + 'ON');
+        }
+        // return (deviceRes = { serialNumber, deviceStatus: payload.toString() });
+      }
+      // TODO: Return error on message timeout
+    });
+
+  console.log('Outside response: ', mqttRes);
+
+  // mqttRes = deviceRes;
+  // return mqttRes;
+  return { serialNumber, deviceStatus: 'OK' };
 };
