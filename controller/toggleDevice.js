@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mqtt = require('mqtt');
 
-module.exports = toggleDevice = (serialNumber, response) => {
+module.exports = toggleDevice = (serialNumber, command, response) => {
   // TODO: Handle server crash when authentication fails
   console.log('Attempting MQTT connection with', process.env.MQTT_URL);
   const client = mqtt.connect(
@@ -14,7 +14,7 @@ module.exports = toggleDevice = (serialNumber, response) => {
   );
   client.on('connect', function() {
     console.log('Toggling device', serialNumber);
-    client.publish(`cmnd/${serialNumber}_fb/power`, '2');
+    client.publish(`cmnd/${serialNumber}_fb/power`, command);
 
     // Fake publish response (Test only)
     // client.publish(`stat/${serialNumber}_fb/POWER`, 'OFF');

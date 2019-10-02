@@ -15,6 +15,7 @@ app.use(express.json({ extended: false }));
 // Define routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/devices', require('./routes/devices'));
+app.use('/api/presets', require('./routes/presets'));
 
 app.use('/api/telematics', require('./routes/telematics'));
 

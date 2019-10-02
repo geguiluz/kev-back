@@ -4,7 +4,7 @@ const DeviceSchema = mongoose.Schema({
   serialNumber: {
     type: String,
     required: true,
-    index: { unique: true },
+    // index: { unique: true },
   },
   name: {
     type: String,
