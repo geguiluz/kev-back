@@ -16,7 +16,7 @@ app.use(express.json({ extended: false }));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/devices', require('./routes/devices'));
 
-app.use('/api/deviceController', require('./routes/deviceController'));
+app.use('/api/telematics', require('./routes/telematics'));
 
 app.use('/api/auth', require('./routes/auth'));
 
