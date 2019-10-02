@@ -29,7 +29,7 @@ router.post('/toggleDevice', auth, (req, res) => {
       client.publish(`cmnd/${serialNumber}_fb/power`, '2');
 
       // Fake publish response (Test only)
-      client.publish(`stat/${serialNumber}_fb/POWER`, 'OFF');
+      // client.publish(`stat/${serialNumber}_fb/POWER`, 'OFF');
 
       client.subscribe(`stat/${serialNumber}_fb/POWER`, function(err) {
         if (!err) {
