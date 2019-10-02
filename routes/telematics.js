@@ -48,7 +48,8 @@ router.post('/powerDevice', auth, async (req, res) => {
 router.post('/generalShutoff', auth, async (req, res) => {
   const { serialNumber, command } = req.body;
   try {
-    res = await generalShutoff(req.user.id, res);
+    shutRes = await generalShutoff(req.user.id);
+    res.json(shutRes);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
