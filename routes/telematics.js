@@ -8,30 +8,47 @@ require('dotenv').config();
 
 const auth = require('../middleware/auth');
 
-const toggleDevice = require('../controller/toggleDevice');
+const powerDevice = require('../controller/powerDevice');
 
-// @route     POST api/telematics
+// @route     POST api/telematics/toggleDevice
 // @desc      Toggles device to its opposite state (ON/OFF)
 // @access    Private
 
 router.post('/toggleDevice', auth, (req, res) => {
   const { serialNumber } = req.body;
   try {
-    toggleDevice(serialNumber, '2', res);
+    powerDevice(serialNumber, '2', res);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
 
-// @route     POST api/telematics
+// @route     POST api/telematics/powerDevice
 // @desc      Powers device ON or OFF specifically
 // @access    Private
 
 router.post('/powerDevice', auth, (req, res) => {
   const { serialNumber, command } = req.body;
   try {
-    toggleDevice(serialNumber, command, res);
+    powerDevice(serialNumber, command, res);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route     POST api/telematics/generalShutoff
+// @desc      Turns off all user devices
+// @access    Private
+
+router.post('/generalShutoff', auth, (req, res) => {
+  const { serialNumber, command } = req.body;
+  try {
+    // TODO:
+    // 1 - Get all device ID's from the database
+    // 2 - Call powerDevice with command OFF for all devices
+    // powerDevice(serialNumber, 'OFF', res);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -39,17 +56,17 @@ router.post('/powerDevice', auth, (req, res) => {
 });
 
 // @route     POST api/telematics
-// @desc      Powers device ON or OFF specifically
+// @desc      Runs the home alone schedule
 // @access    Private
 
-router.post('/runSchedule', auth, (req, res) => {
+router.post('/runHomeAlone', auth, (req, res) => {
   const { serialNumber, command } = req.body;
   try {
     // TODO:
     // 1 - Get all device ID's and commands from the database
     // 2 - Generate a random interval in order to toggle actions
     // 3 - Call powerDevice for each serial number
-    toggleDevice(serialNumber, command, res);
+    // powerDevice(serialNumber, command, res);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
