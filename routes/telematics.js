@@ -9,6 +9,7 @@ require('dotenv').config();
 const auth = require('../middleware/auth');
 
 const powerDevice = require('../controller/powerDevice');
+const generalShutoff = require('../controller/generalShutoff');
 
 // @route     POST api/telematics/toggleDevice
 // @desc      Toggles device to its opposite state (ON/OFF)
@@ -17,7 +18,7 @@ const powerDevice = require('../controller/powerDevice');
 router.post('/toggleDevice', auth, (req, res) => {
   const { serialNumber } = req.body;
   try {
-    powerDevice(serialNumber, '2', res);
+    res.json(powerDevice(serialNumber, '2', res));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -31,7 +32,7 @@ router.post('/toggleDevice', auth, (req, res) => {
 router.post('/powerDevice', auth, (req, res) => {
   const { serialNumber, command } = req.body;
   try {
-    powerDevice(serialNumber, command, res);
+    res.json(powerDevice(serialNumber, command, res));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -42,13 +43,10 @@ router.post('/powerDevice', auth, (req, res) => {
 // @desc      Turns off all user devices
 // @access    Private
 
-router.post('/generalShutoff', auth, (req, res) => {
+router.post('/generalShutoff', auth, async (req, res) => {
   const { serialNumber, command } = req.body;
   try {
-    // TODO:
-    // 1 - Get all device ID's from the database
-    // 2 - Call powerDevice with command OFF for all devices
-    // powerDevice(serialNumber, 'OFF', res);
+    res = await generalShutoff(req.user.id, res);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

@@ -4,7 +4,8 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator/check');
 
-const User = require('../models/User');
+const getUserDevices = require('../controller/getUserDevices');
+
 const Device = require('../models/Device');
 
 // @route     GET api/devices
@@ -15,7 +16,8 @@ router.get('/', auth, async (req, res) => {
   try {
     // Since we're using the auth middleware, we get access to the user
     // console.log(req.user);
-    const devices = await Device.find({ user: req.user.id });
+    // const devices = await Device.find({ user: req.user.id });
+    const devices = await getUserDevices(req.user.id);
     // console.log(devices);
     res.json(devices);
   } catch (err) {
