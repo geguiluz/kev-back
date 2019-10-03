@@ -14,7 +14,10 @@ module.exports = powerDevice = async (serialNumber, command) => {
     }
   );
   client.on('connect', function() {
-    console.log(`Powering ${command} device`, serialNumber);
+    console.log(
+      `${command === '2' ? `Toggling` : `Powering ${command}`} device`,
+      serialNumber
+    );
     client.publish(`cmnd/${serialNumber}_fb/power`, command);
 
     // Fake publish response (Test only)

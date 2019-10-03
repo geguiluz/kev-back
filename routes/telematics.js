@@ -10,6 +10,7 @@ const auth = require('../middleware/auth');
 
 const powerDevice = require('../controller/powerDevice');
 const generalShutoff = require('../controller/generalShutoff');
+const randomToggle = require('../controller/randomToggle');
 
 // @route     POST api/telematics/toggleDevice
 // @desc      Toggles device to its opposite state (ON/OFF)
@@ -56,18 +57,15 @@ router.post('/generalShutoff', auth, async (req, res) => {
   }
 });
 
-// @route     POST api/telematics
-// @desc      Runs the home alone schedule
+// @route     POST api/telematics/randomToggle
+// @desc      Toggles random devices
 // @access    Private
 
-router.post('/runHomeAlone', auth, (req, res) => {
+router.post('/randomToggle', auth, async (req, res) => {
   const { serialNumber, command } = req.body;
   try {
-    // TODO:
-    // 1 - Get all device ID's and commands from the database
-    // 2 - Generate a random interval in order to toggle actions
-    // 3 - Call powerDevice for each serial number
-    // powerDevice(serialNumber, command, res);
+    randRes = await randomToggle(req.user.id);
+    res.json(randRes);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
