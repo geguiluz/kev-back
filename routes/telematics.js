@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const mqtt = require('mqtt');
+const Preset = require('../models/Preset');
 
 require('dotenv').config();
 
@@ -59,14 +59,41 @@ router.post('/generalShutoff', auth, async (req, res) => {
 });
 
 // @route     POST api/telematics/alexaShutoff
-// @desc      Turns off all user devices
+// @desc      Turns off all user devices from Alexa skill
 // @access    Public
 
 router.post('/alexaShutoff', async (req, res) => {
-  const { serialNumber, command } = req.body;
   try {
+    // TODO: Get user id linked to Alexa somehow
     shutRes = await generalShutoff('5d95835ed44b2b8bc00fb47a');
     res.json(shutRes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route     POST api/telematics/alexa
+// @desc      Toggles some user devices randomly from Alexa skill
+// @access    Public
+
+router.post('/alexaShuffle', async (req, res) => {
+  const { isActive } = req.body;
+  const presetFields = {};
+  const presetID = '5d96dd59942ff6258d285d0c';
+  presetFields.isActive = isActive;
+  try {
+    // 1 - Get my 'home-alone' type preset and set it to whatever the request
+    // body says (true or false)
+    // The scheduleTimer will take care of the rest
+    let preset = await Preset.findById(presetID);
+    if (!preset) return res.status(404).json({ msg: 'Preset not found' });
+
+    preset = await Preset.findByIdAndUpdate(presetID, {
+      $set: presetFields,
+    });
+    scheduleTimer(presetFields.isActive, 7);
+    res.json(preset);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
