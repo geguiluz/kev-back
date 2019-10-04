@@ -57,6 +57,21 @@ router.post('/generalShutoff', auth, async (req, res) => {
   }
 });
 
+// @route     POST api/telematics/alexaShutoff
+// @desc      Turns off all user devices
+// @access    Private
+
+router.post('/alexaShutoff', async (req, res) => {
+  const { serialNumber, command } = req.body;
+  try {
+    shutRes = await generalShutoff('5d95835ed44b2b8bc00fb47a');
+    res.json(shutRes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 // @route     POST api/telematics/randomToggle
 // @desc      Toggles random devices
 // @access    Private
