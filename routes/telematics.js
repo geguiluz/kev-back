@@ -60,7 +60,7 @@ router.post('/generalShutoff', auth, async (req, res) => {
 
 // @route     POST api/telematics/alexaShutoff
 // @desc      Turns off all user devices
-// @access    Private
+// @access    Public
 
 router.post('/alexaShutoff', async (req, res) => {
   const { serialNumber, command } = req.body;
