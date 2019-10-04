@@ -3,20 +3,19 @@ const getUserDevices = require('./getUserDevices');
 
 module.exports = randomToggle = async user => {
   try {
-    // TODO:
-    // 1 - Get all device ID's and commands from the database
-    // 2 - Generate a random interval in order to toggle actions
-    // 3 - Call powerDevice for each serial number
-    // powerDevice(serialNumber, command, res);
+    // TODO: Get the devices as an array argument
     if (user !== null) {
       const devices = await getUserDevices(user);
       console.log('Toggling random devices');
+      // 1 - Map through devices passed in from the devices array
       let devicesOff = devices.map(async currentDevice => {
+        // 2 - Generate a random interval in order to toggle actions
         // Let's flip a coin to see if we toggle this one or not
         let coin = Math.floor(Math.random() * 2);
         let deviceRes = '';
         console.log('Coin: ', coin);
         if (coin === 1) {
+          // 3 - Call powerDevice for each serial number
           const { serialNumber } = currentDevice;
           console.log('Toggling ', serialNumber);
           deviceRes = await powerDevice(serialNumber, '2');
