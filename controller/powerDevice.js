@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mqtt = require('mqtt');
 
-module.exports = powerDevice = async (serialNumber, command) => {
+module.exports = powerDevice = async (serialNumber, command, callback2) => {
   try {
     // TODO: Handle server crash when authentication fails
     console.log('Attempting MQTT connection with', process.env.MQTT_URL);
@@ -36,34 +36,31 @@ module.exports = powerDevice = async (serialNumber, command) => {
       });
     });
 
-    mensaje = () =>
+    mensaje = callback =>
       client.on('message', async function(topic, payload) {
         // message is Buffer
         if (topic === `stat/${serialNumber}_fb/POWER`) {
           console.log(
             `Response from device ${serialNumber}, topic ${topic} is: ${payload.toString()}`
           );
-          let status = ` ${payload.toString()}`;
+          let status = payload.toString();
           client.end();
-          if (status === ' OFF') {
-            console.log('Entró al OFF');
-            return (mqttRes = mqttRes + 'OFF');
-          } else {
-            console.log('Entró al ON');
-            return (mqttRes = mqttRes + 'ON');
-          }
+          callback(status);
           // return (deviceRes = { serialNumber, deviceStatus: payload.toString() });
         }
         // TODO: Return error on message timeout
       });
 
+    mensaje(response => {
+      callback2({ serialNumber, deviceStatus: response });
+    });
     console.log('Outside response: ', mqttRes);
 
     // mqttRes = deviceRes;
     // return mqttRes;
-    return { serialNumber, deviceStatus: 'OK' };
+    //return
   } catch (err) {
     console.error(err.message);
-    return err;
+    callback2(err);
   }
 };
