@@ -10,10 +10,10 @@ module.exports = generalShutoff = async user => {
     const devices = await getUserDevices(user);
     const res = {};
     let devicesOff = devices.map(async currentDevice => {
-      const { serialNumber } = currentDevice;
+      const { _id, serialNumber } = currentDevice;
       console.log('Turning off ', serialNumber);
       // let deviceRes = await powerDevice(serialNumber, 'OFF');
-      await powerDevice(serialNumber, 'OFF', response => {
+      await powerDevice(_id, serialNumber, 'OFF', response => {
         try {
           return res.json(response);
         } catch (err) {

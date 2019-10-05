@@ -48,7 +48,6 @@ router.post('/powerDevice', auth, async (req, res) => {
 // @access    Private
 
 router.post('/generalShutoff', auth, async (req, res) => {
-  const { serialNumber, command } = req.body;
   try {
     shutRes = await generalShutoff(req.user.id);
     res.json(shutRes);

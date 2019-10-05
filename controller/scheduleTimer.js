@@ -11,10 +11,10 @@ module.exports = scheduleTimer = async (isEnabled, delay) => {
     const devices = await getUserDevices(user);
     const res = {};
     let devicesOff = devices.map(async currentDevice => {
-      const { serialNumber } = currentDevice;
+      const { _id, serialNumber } = currentDevice;
       console.log('Turning off ', serialNumber);
       // let deviceRes = await powerDevice(serialNumber, 'OFF');
-      await powerDevice(serialNumber, 'ON', response => {
+      await powerDevice(_id, serialNumber, 'ON', response => {
         try {
           return res.json(response);
         } catch (err) {

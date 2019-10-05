@@ -12,9 +12,9 @@ module.exports = randomToggle = async devices => {
       console.log('Coin: ', coin);
       if (coin === 1) {
         // 3 - Call powerDevice for each serial number
-        const { serialNumber } = currentDevice;
+        const { _id, serialNumber } = currentDevice;
         console.log('Toggling ', serialNumber);
-        deviceRes = await powerDevice(serialNumber, '2');
+        deviceRes = await powerDevice(_id, serialNumber, '2');
       }
       return deviceRes;
     });
