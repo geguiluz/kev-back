@@ -17,9 +17,9 @@ const randomToggle = require('../controller/randomToggle');
 // @access    Private
 
 router.post('/toggleDevice', auth, async (req, res) => {
-  const { serialNumber } = req.body;
+  const { _id, serialNumber } = req.body;
   try {
-    await powerDevice(serialNumber, '2', response => {
+    await powerDevice(_id, serialNumber, '2', response => {
       res.json(response);
     });
   } catch (err) {

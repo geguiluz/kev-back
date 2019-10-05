@@ -2,7 +2,12 @@ require('dotenv').config();
 
 const mqtt = require('mqtt');
 
-module.exports = powerDevice = async (serialNumber, command, callback2) => {
+module.exports = powerDevice = async (
+  _id,
+  serialNumber,
+  command,
+  callback2
+) => {
   try {
     // TODO: Handle server crash when authentication fails
     console.log('Attempting MQTT connection with', process.env.MQTT_URL);
@@ -52,7 +57,7 @@ module.exports = powerDevice = async (serialNumber, command, callback2) => {
       });
 
     mensaje(response => {
-      callback2({ serialNumber, deviceStatus: response });
+      callback2({ _id, serialNumber, deviceStatus: response });
     });
     console.log('Outside response: ', mqttRes);
 
