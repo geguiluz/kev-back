@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mqtt = require('async-mqtt');
 
-module.exports = mqttSubscribe = async subTopic => {
+module.exports = mqttSubscribe = async (client, subTopic) => {
   return new Promise(async (resolve, reject) => {
     try {
       // TODO: Handle server crash when authentication fails
@@ -14,7 +14,6 @@ module.exports = mqttSubscribe = async subTopic => {
           password: process.env.MQTT_PASSWORD,
         }
       );
-      // TODO Bug: Need to wait for connection using client.on('connect'...) before subscribing
       client.on('connect', async () => {
         await client.subscribe(subTopic);
         console.log('Subscribed to topic', subTopic);
