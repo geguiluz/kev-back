@@ -15,8 +15,10 @@ module.exports = mqttSubscribe = async subTopic => {
         }
       );
       // TODO Bug: Need to wait for connection using client.on('connect'...) before subscribing
-      await client.subscribe(subTopic);
-      console.log('Subscribed to topic', subTopic);
+      client.on('connect', async () => {
+        await client.subscribe(subTopic);
+        console.log('Subscribed to topic', subTopic);
+      });
       // TODO: Timeout
       client.on('message', async (topic, payload) => {
         // TODO: BugFix: we should look for a specific topic
