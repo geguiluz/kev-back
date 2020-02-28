@@ -9,9 +9,11 @@ module.exports = mqttSubscribe = async (client, subTopic) => {
       });
       // TODO: Timeout
       client.on('message', async (topic, payload) => {
-        // TODO: BugFix: we should look for a specific topic
-        console.log('Message received');
-        resolve({ topic: topic, message: payload.toString() });
+        console.log(topic, subTopic);
+        if (topic === subTopic) {
+          console.log('Matching message received');
+          resolve({ topic: topic, message: payload.toString() });
+        }
       });
     } catch (err) {
       console.error(err.message);
