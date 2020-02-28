@@ -19,9 +19,8 @@ const randomToggle = require('../controller/randomToggle');
 router.post('/toggleDevice', auth, async (req, res) => {
   const { _id, serialNumber } = req.body;
   try {
-    await powerDevice(_id, serialNumber, '2', response => {
-      res.json(response);
-    });
+    deviceRes = await powerDevice(_id, serialNumber, '2');
+    res.json(deviceRes);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
