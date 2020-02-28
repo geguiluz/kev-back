@@ -9,7 +9,13 @@ module.exports = powerDevice = async (_id, serialNumber, command) => {
     serialNumber
   );
   await mqttPost(`cmnd/${serialNumber}_fb/power`, command);
-  const result = await mqttSubscribe(`stat/${serialNumber}_fb/POWER`);
-  console.log('Result: ', result);
-  return result;
+  const mqttResponse = await mqttSubscribe(`stat/${serialNumber}_fb/POWER`);
+  // The response expected by the front end should be something like this:
+  // {
+  //   "_id": "XXXXXXXXXX",
+  //   "serialNumber": "DVES_5A55AA",
+  //   "deviceStatus": "OFF"
+  // }
+  response = { _id, serialNumber, deviceStatus: mqttResponse.message };
+  return response;
 };
